@@ -15,7 +15,7 @@ test_exe_path="build/Debug/${dir_name}_test.exe"
 clean(){
   echo "Cleaning build directory..."
   # Checking if build directory exists
-  if [-d "build" ]; then
+  if [ -d "build" ]; then
     echo "Removing existing build directory..."
     # -rf: recursive and force options for rm
     rm -rf build

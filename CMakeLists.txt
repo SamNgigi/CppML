@@ -26,6 +26,18 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 message(STATUS "CMAKE_CXX_COMPILER_VERSION: ${CMAKE_CXX_COMPILER_VERSION}")
 
 
+# Finds Eigen3
+find_package(Eigen3 CONFIG REQUIRED)
+message(STATUS "Eigen3 version: ${EIGEN3_VERSION_STRING}")
+
+# Finds Boost
+find_package(Boost REQUIRED)
+message(STATUS "Boost version: ${Boost_VERSION}")
+
+# Adds dependency include directories
+include_directories(include ${EIGEN3_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
+
+
 # Adds source files
 file(GLOB_RECURSE SOURCES "src/*.cpp")
 
@@ -36,9 +48,11 @@ list(REMOVE_ITEM SOURCES "${CMAKE_SOURCE_DIR}/src/main.cpp")
 add_executable(${PROJECT_NAME} "src/main.cpp" ${SOURCES})
 
 # Sets include directories for the main target
-target_include_directories(${PROJECT_NAME} PRIVATE include)
+target_include_directories(${PROJECT_NAME} PRIVATE include ${EIGEN3_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
 
 # Link any necessary libraries here, if needed
+# Linking Eigen3 and Boost to main target
+target_link_libraries(${PROJECT_NAME} PRIVATE Eigen3::Eigen ${Boost_LIBRARIES})
 
 
 # Finds Google Test package
@@ -51,10 +65,10 @@ file(GLOB_RECURSE TEST_SOURCES "tests/*.cpp")
 add_executable(${PROJECT_NAME}_test ${TEST_SOURCES} ${SOURCES})
 
 # Sets include directory for the test target
-target_include_directories(${PROJECT_NAME}_test PRIVATE include ${GTEST_INCLUDE_DIRS})
+target_include_directories(${PROJECT_NAME}_test PRIVATE include ${GTEST_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
 
-# Link Google Test to the test executable
-target_link_libraries(${PROJECT_NAME}_test PRIVATE GTest::gtest GTest::gtest_main)
+# Link Google Test, Eigen3 and Boost to the test executable
+target_link_libraries(${PROJECT_NAME}_test PRIVATE GTest::gtest GTest::gtest_main Eigen3::Eigen ${Boost_LIBRARIES})
 
 
 # Custom target to run the executable after building
