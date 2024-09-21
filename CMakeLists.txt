@@ -30,7 +30,7 @@ message(STATUS "CMAKE_CXX_COMPILER_VERSION: ${CMAKE_CXX_COMPILER_VERSION}")
 file(GLOB_RECURSE SOURCES "src/*.cpp")
 
 # Removes main.cpp from SOURCES
-list(REMOVE_ITEM SOURCES "{CMAKE_SOURCE_DIR}/src/main.cpp")
+list(REMOVE_ITEM SOURCES "${CMAKE_SOURCE_DIR}/src/main.cpp")
 
 # Adds back main.cpp when generating executable for main app
 add_executable(${PROJECT_NAME} "src/main.cpp" ${SOURCES})
