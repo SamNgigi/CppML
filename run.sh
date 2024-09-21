@@ -39,18 +39,21 @@ build(){
   # -p action for mkdir creates parent directories if they don't exist
   mkdir -p build
   echo "Building the project..."
-  cd build
+  # We use this instead of cd as we wount change directory if pushd fails
+  pushd build > /dev/null
   cmake -DCMAKE_TOOLCHAIN_FILE=/c/Users/samtn/vcpkg/scripts/buildsystems/vcpkg.cmake ..
   if [ $? -ne 0 ]; then
     echo "CMake configuration failed."
+    popd > /dev/null
     exit 1
   fi
   cmake --build .
   if [ $? -ne 0 ]; then
     echo "Build failed."
+    popd > /dev/null
     exit 1
   fi
-  cd ..
+  popd > /dev/null
   echo "Build completed successfully."
 }
 
@@ -65,9 +68,9 @@ run() {
       exit 1
     fi
   fi
-  echo "Running executable..."
+  echo "Running executable with arguments: $*"
   # Execute the program
-  "$exe_path"
+  "$exe_path" "$@"
 }
 
 # Function to run tests in a new window
@@ -90,37 +93,46 @@ run_tests_new_window() {
 
 
 # Main script logic
-# $# gives the number of command-line arguments
-if [ $# -eq 0 ]; then
-  run
-else
-  # Loop through all command-line-arguments
-  while [ $# -gt 0 ]; do
-    # case statement for argument parsing
-    case "$1" in
-      build)
-        build
-        ;;
-      run)
-        run
-        ;;
-      test)
-        test
-        ;;
-      clean)
-        clean
-        ;;
-      run_tests_new_window)
-        run_tests_new_window
+actions=()
+app_args=()
+parsing_actions=true
+
+# Parse arguments
+for arg in "$@"; do
+  if $parsing_actions; then
+    case $arg in
+      clean|build|run|test)
+        actions+=("$arg")
         ;;
       *)
-        echo "Invalid action: $1"
-        echo "Valid actions are: clean, build, run test, run_tests_new_window"
-        exit 1
+        parsing_actions=false
+        app_args+=("$arg")
         ;;
-    esac # end case
-    # shift removes the first argument, moving to the next one
-    shift
-  done
+    esac
+  else
+    app_args+=("$arg")
+  fi
+done
+
+# If no actions specified, default to "run"
+if [ ${#actions[@]} -eq 0 ]; then
+  actions+=("run")
 fi
 
+# Execute actions
+for action in "${actions[@]}"; do
+  case $action in
+    clean)
+      clean
+      ;;
+    build)
+      build
+      ;;
+    run)
+      run "${app_args[@]}"
+      ;;
+    test)
+      test
+      ;;
+  esac
+done
