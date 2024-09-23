@@ -22,6 +22,6 @@ int main(int argc, char *argv[]){
 
   std::cout << dataMat.topRows(3) << std::endl;
 
-  return 0;
+  return EXIT_SUCCESS;
 
 }
