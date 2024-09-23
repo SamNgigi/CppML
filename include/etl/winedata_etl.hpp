@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include <Eigen/Dense>
 
 class WineDataETL{
 
@@ -14,6 +15,12 @@ public:
   WineDataETL(std::string dataset, std::string delimiter, bool header): dataset(dataset), delimiter(delimiter), header(header) {}
   
   std::vector<std::vector<std::string>> readCSV();
+
+  Eigen::MatrixXd csvToEigenMatrix(
+    std::vector<std::vector<std::string>> data,
+    size_t rows,
+    size_t cols
+  );
 
 };
 
