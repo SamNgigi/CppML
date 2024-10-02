@@ -20,7 +20,11 @@ int main(int argc, char *argv[]){
 
   Eigen::MatrixXd dataMat = etl.csvToEigenMatrix(data, rows, cols);
 
-  std::cout << dataMat.topRows(3) << std::endl;
+  std::cout << "Data::\n" << dataMat.topRows(3) << std::endl;
+
+  Eigen::MatrixXd normData = etl.normalize(dataMat, true);
+
+  std::cout << "Normed Data::\n" << normData.bottomRows(3)<< std::endl;
 
   return EXIT_SUCCESS;
 

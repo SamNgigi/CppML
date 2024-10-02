@@ -17,10 +17,14 @@ public:
   std::vector<std::vector<std::string>> readCSV();
 
   Eigen::MatrixXd csvToEigenMatrix(
-    std::vector<std::vector<std::string>> data,
+    std::vector<std::vector<std::string>> dataset,
     size_t rows,
     size_t cols
   );
+
+  Eigen::VectorXd mean(const Eigen::MatrixXd& data);
+  Eigen::VectorXd stdDev(const Eigen::MatrixXd& data);
+  Eigen::MatrixXd normalize(Eigen::MatrixXd ata, bool normalizeTarget);
 
 };
 

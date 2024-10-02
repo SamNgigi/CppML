@@ -57,3 +57,34 @@ Eigen::MatrixXd WineDataETL::csvToEigenMatrix(
 
 }
 
+
+Eigen::VectorXd WineDataETL::mean(const Eigen::MatrixXd& data){
+  return data.colwise().mean();
+}
+
+Eigen::VectorXd WineDataETL::stdDev(const Eigen::MatrixXd& data){
+  return ((data.array().square().colwise().sum())/(data.rows()-1)).sqrt();
+}
+
+
+Eigen::MatrixXd WineDataETL::normalize(Eigen::MatrixXd data, bool normalizeTarget){
+    Eigen::MatrixXd dataNorm;
+    if(normalizeTarget==true) {
+        dataNorm = data;
+    } else {
+        dataNorm = data.leftCols(data.cols()-1);
+    }
+
+    auto mn = mean(dataNorm);
+    Eigen::MatrixXd scaled_data = dataNorm.rowwise() - mn.transpose();
+    auto std = WineDataETL::stdDev(scaled_data);
+
+    Eigen::MatrixXd norm = scaled_data.array().rowwise()/std.transpose().array();
+
+    if(normalizeTarget==false) {
+        norm.conservativeResize(norm.rows(), norm.cols()+1);
+        norm.col(norm.cols()-1) = data.rightCols(1);
+    }
+
+    return norm;
+}
