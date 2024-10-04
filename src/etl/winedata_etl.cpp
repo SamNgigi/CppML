@@ -26,7 +26,7 @@ std::vector<std::vector<std::string>> WineDataETL::readCSV(){
   while(std::getline(file, line)){
     std::vector<std::string> vec;
     boost::algorithm::split(vec, line, boost::is_any_of(delimiter));
-    data.push_back(vec);
+    data.emplace_back(vec);
   }
   file.close();
 
@@ -57,6 +57,30 @@ Eigen::MatrixXd WineDataETL::csvToEigenMatrix(
 
 }
 
+std::tuple<Eigen::MatrixXd,Eigen::MatrixXd,Eigen::MatrixXd,Eigen::MatrixXd> 
+WineDataETL::trainTestSplit(
+  const Eigen::MatrixXd& data,
+  float train_size
+){
+  int rows = data.rows();
+  int train_rows = round(train_size * rows);
+  int test_rows = rows - train_rows;
+
+  // TRAIN 
+  Eigen::MatrixXd train = data.topRows(train_rows);
+
+  Eigen::MatrixXd X_train = train.leftCols(data.cols()-1);
+  Eigen::MatrixXd y_train = train.rightCols(1);
+
+  // TEST
+  Eigen::MatrixXd test = data.bottomRows(test_rows);
+
+  Eigen::MatrixXd X_test = test.leftCols(data.cols()-1);
+  Eigen::MatrixXd y_test = test.rightCols(1);
+  
+  return std::make_tuple(X_train, y_train, X_test, y_test);
+  
+}
 
 Eigen::VectorXd WineDataETL::mean(const Eigen::MatrixXd& data){
   return data.colwise().mean();
@@ -67,7 +91,7 @@ Eigen::VectorXd WineDataETL::stdDev(const Eigen::MatrixXd& data){
 }
 
 
-Eigen::MatrixXd WineDataETL::normalize(Eigen::MatrixXd data, bool normalizeTarget){
+Eigen::MatrixXd WineDataETL::normalize(const Eigen::MatrixXd& data, bool normalizeTarget){
     Eigen::MatrixXd dataNorm;
     if(normalizeTarget==true) {
         dataNorm = data;

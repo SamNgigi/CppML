@@ -22,9 +22,14 @@ public:
     size_t cols
   );
 
+  std::tuple<Eigen::MatrixXd,Eigen::MatrixXd,Eigen::MatrixXd,Eigen::MatrixXd> trainTestSplit(
+    const Eigen::MatrixXd& data,
+    float train_size
+  );
+
   Eigen::VectorXd mean(const Eigen::MatrixXd& data);
   Eigen::VectorXd stdDev(const Eigen::MatrixXd& data);
-  Eigen::MatrixXd normalize(Eigen::MatrixXd ata, bool normalizeTarget);
+  Eigen::MatrixXd normalize(const Eigen::MatrixXd& data, bool normalizeTarget);
 
 };
 
