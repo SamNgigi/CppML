@@ -113,13 +113,19 @@ Eigen::MatrixXd WineDataETL::normalize(const Eigen::MatrixXd& data, bool normali
     return norm;
 }
 
-void WineDataETL::vectorToFile(std::vector<float> vec, std::string filename){
+void WineDataETL::vectorToFile(
+  const std::vector<float>& vec, 
+  const std::string& filename
+){
   std::ofstream outfile(filename);
   std::ostream_iterator<float> output_iterator(outfile, "\n");
   std::copy(vec.begin(), vec.end(), output_iterator);
 }
 
-void WineDataETL::eigenToFile(Eigen::MatrixXd data, std::string filename){
+void WineDataETL::eigenToFile(
+  const Eigen::MatrixXd& data, 
+  const std::string& filename
+){
   std::ofstream outfile(filename);
   if(outfile.is_open()){
     outfile << data << "\n";
