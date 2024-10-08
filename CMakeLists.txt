@@ -8,6 +8,8 @@ project(${PROJECT_NAME})
 
 # Defining project name as preprocesssor macro
 add_definitions(-DPROJECT_NAME="${PROJECT_NAME}")
+# Defining project root
+add_definitions(-DPROJECT_ROOT="${CMAKE_SOURCE_DIR}")
 
 # Enables generation of compile_commands.json 
 # Works fine on linux. Needs ninja on windows.

@@ -30,6 +30,8 @@ public:
   Eigen::VectorXd mean(const Eigen::MatrixXd& data);
   Eigen::VectorXd stdDev(const Eigen::MatrixXd& data);
   Eigen::MatrixXd normalize(const Eigen::MatrixXd& data, bool normalizeTarget);
+  void vectorToFile(std::vector<float> vec, std::string filename);
+  void eigenToFile(Eigen::MatrixXd data, std::string filename);
 
 };
 

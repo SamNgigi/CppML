@@ -3,6 +3,9 @@
 
 #include <iostream>
 #include <Eigen/Dense>
+#include <filesystem>
+
+namespace fs = std::filesystem;
 
 int main(int argc, char *argv[]){
   
@@ -59,8 +62,20 @@ int main(int argc, char *argv[]){
   std::tuple<Eigen::VectorXd,std::vector<float>> gd = lr.gradientDescent(X_train, y_train, theta, alpha, iters);
   std::tie(thetaOut, cost) = gd;
 
-  std::cout << "Theta:: " << thetaOut << "\n";
+  std::cout << "Theta:: " << thetaOut << "\n\n";
+
+  std::cout << "Cost\n";
+  for(auto c : cost){
+    std::cout << c << "\n";
+  }
+  std::cout << "\n";
+
+  fs::path thetaOut_path = fs::current_path() / "datasets" / "thetaOut.txt";
+  fs::path cost_path = fs::current_path() / "datasets" / "cost.txt";
+  etl.eigenToFile(thetaOut, thetaOut_path.string());
+  etl.vectorToFile(cost, cost_path.string());
 
   return EXIT_SUCCESS;
 
 }
+
