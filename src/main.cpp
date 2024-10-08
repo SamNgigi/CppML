@@ -70,9 +70,10 @@ int main(int argc, char *argv[]){
   }
   std::cout << "\n";
 
+  fs::path data_path = fs::current_path() / "datasets" ;
 /* 
-  fs::path thetaOut_path = fs::current_path() / "datasets" / "thetaOut.txt";
-  fs::path cost_path = fs::current_path() / "datasets" / "cost.txt";
+  fs::path thetaOut_path = data_path / "thetaOut.txt";
+  fs::path cost_path = data_path / "cost.txt";
   etl.eigenToFile(thetaOut, thetaOut_path.string());
   etl.vectorToFile(cost, cost_path.string());
  */
@@ -90,6 +91,9 @@ int main(int argc, char *argv[]){
 
   float R_Squared = lr.rSquared(y, y_train_hat);
   std::cout << "R-Squared: " << R_Squared << "\n";
+
+  fs::path ytrain_hat_path = data_path / "y_train_hat.txt";
+  // etl.eigenToFile(y_train_hat, ytrain_hat_path.string());
 
   return EXIT_SUCCESS;
 
