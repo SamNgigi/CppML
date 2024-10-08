@@ -19,6 +19,8 @@ public:
     int iters
   );
 
+  float rSquared(Eigen::MatrixXd y, Eigen::MatrixXd y_hat);
+
 };
 
 

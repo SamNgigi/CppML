@@ -70,10 +70,26 @@ int main(int argc, char *argv[]){
   }
   std::cout << "\n";
 
+/* 
   fs::path thetaOut_path = fs::current_path() / "datasets" / "thetaOut.txt";
   fs::path cost_path = fs::current_path() / "datasets" / "cost.txt";
   etl.eigenToFile(thetaOut, thetaOut_path.string());
   etl.vectorToFile(cost, cost_path.string());
+ */
+
+  auto mu_data = etl.mean(dataMat);
+  auto mu_z = mu_data(11);
+
+  auto scaled_data = dataMat.rowwise() - mu_data.transpose();
+
+  auto sigma_data = etl.stdDev(scaled_data);
+  auto sigma_z = sigma_data(11);
+
+  Eigen::MatrixXd y_train_hat = (X_train * thetaOut * sigma_z).array()+ mu_z;
+  Eigen::MatrixXd y = dataMat.col(11).topRows(1279);
+
+  float R_Squared = lr.rSquared(y, y_train_hat);
+  std::cout << "R-Squared: " << R_Squared << "\n";
 
   return EXIT_SUCCESS;
 
